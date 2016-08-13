@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Angular tweet sample</title>
+	<!-- <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css"> -->
+	
+	<!-- Angular Material requires Angular.js Libraries -->
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-aria.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-messages.min.js"></script>
+	<script src="https://use.fontawesome.com/2e8942c7c6.js"></script>
+
+	<!-- Angular Material Library -->
+	<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
+	<script type="text/javascript" src="./assets/js/app.js"></script>
+	<link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.0-rc4/angular-material.min.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+<body ng-app="MyApp">
+
+	<script type="text/ng-template" id="userCard.tmpl.html">
+		<md-card md-colors="{backgroundColor: '{{theme}}-primary-700'}">
+			<md-card-title>
+				<md-card-title-media>
+					<div class="md-media-sm card-media" layout layout-align="center center"
+					md-colors="{background: '{{theme}}-accent'}">
+					<!-- <md-icon md-svg-icon="person"></md-icon> -->
+				</div>
+			</md-card-title-media>
+			<md-card-title-text>
+				<span class="md-headline">{{name}}</span>
+				<span class="md-subhead description">This card is colored according the {{theme}} theme</span>
+			</md-card-title-text>
+		</md-card-title>
+	</md-card>
+</script>
+
+
+<div ng-controller="DemoCtrl" layout="column" ng-cloak="" class="md-inline-form inputdemoBasicUsage">
+
+     <script type="text/ng-template" id="loginform.tmpl.html">
+     	<md-dialog flex="50" ng-cloak>
+     		<div layout="column" class="loginBox md-whiteframe-z1">
+     			<md-toolbar>
+     				<div class="md-toolbar-tools">
+     					<h2>Welcome to PURR! Type your name to get started!</h2>
+     					<span flex></span>
+     					<md-button class="md-icon-button" ng-click="cancel()">
+     						<i class="fa fa-times"></i>
+     						<!-- <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon> -->
+     					</md-button>
+     				</div>
+     			</md-toolbar>
+     			<md-content layout="column" class="md-padding">
+     				<form name="formLogin" ng-submit="loginUser()" >
+     					<md-input-container class="md-block">
+     						<label>Your name</label>
+     						<input name="username" required ng-model="username" md-maxlength="30" />
+     						<div ng-messages="formLogin.username.$error">
+     							<div ng-message="required">This is required.</div>
+     							<div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>
+     						</div>
+     					</md-input-container>
+     					<div layout="column" style="padding-top:20px;"> <!-- layout-align="center center" -->
+     						<md-button class="md-raised md-primary" type="submit">START SPAMMING</md-button>
+     					</div>							
+     				</form>
+     			</md-content>
+     		</div>
+     	</md-dialog>
+     </script>
+
+     <script type="text/ng-template" id="tweetdetails.tmpl.html">
+     	<md-dialog aria-label="Mango (Fruit)" flex="50" ng-cloak>
+     		<form>
+					<!-- <md-toolbar>
+						<div class="md-toolbar-tools">
+							<h2>Send your meow tweet</h2>
+							<span flex></span>
+							<md-button class="md-icon-button" ng-click="cancel()">
+								<md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+							</md-button>
+						</div>
+					</md-toolbar> -->
+
+					<md-dialog-content>
+						<div class="md-dialog-content">
+							<!-- <h3>Using .md-dialog-content class that sets the padding as the spec</h3> -->
+							<div layout="row">
+								<div flex="10">
+									<img src="https://lh3.googleusercontent.com/i2YTrx2oAjrpTZAKE6pCIEXCrC3st6rJ8xFyaB1gaqLrR1HVMQJ14x7yt-epzMx1CzdSFxlOzQ=w1920-h1080-rw-no" class="avatar" />
+								</div>
+								<div flex="90" class="tweet-details">
+									<h3 class="no-padding-no-margin"><!-- Sonny R. Recio -->
+										{{username}}
+									</h3>
+								</div>
+							</div>
+
+							<h2>
+								{{meowmessage}}
+							</h2>
+
+							<!-- <p>
+								The mango is a juicy stone fruit belonging to the genus Mangifera, consisting of numerous tropical fruiting trees, cultivated mostly for edible fruit. The majority of these species are found in nature as wild mangoes. They all belong to the flowering plant family Anacardiaceae. The mango is native to South and Southeast Asia, from where it has been distributed worldwide to become one of the most cultivated fruits in the tropics.
+							</p> -->
+						</div>
+					</md-dialog-content>
+
+					<md-dialog-actions layout="row">
+						<!-- <md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
+							More on Wikipedia
+						</md-button>
+						<span flex></span> -->
+						<md-button ng-click="answer('not useful')">
+							REPLY
+							<!-- <i class="fa fa-reply fa-2x" aria-hidden="true"></i> -->
+						</md-button>
+						<md-button ng-click="answer('useful')">
+							LIKE
+							<!-- <i class="fa fa-thumbs-up fa-2x" aria-hidden="true"></i> -->
+						</md-button>
+					</md-dialog-actions>
+				</form>
+			</md-dialog>
+		</script>
+
+		<script type="text/ng-template" id="dialog1.tmpl.html">
+			<md-dialog aria-label="Mango (Fruit)" ng-cloak>
+				<form>
+					<md-toolbar>
+						<div class="md-toolbar-tools">
+							<h2>Send your meow tweet</h2>
+							<span flex></span>
+							<md-button class="md-icon-button" ng-click="cancel()">
+								<md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+							</md-button>
+						</div>
+					</md-toolbar>
+
+					<md-dialog-content>
+						<div class="md-dialog-content">
+							<!-- <h3>Using .md-dialog-content class that sets the padding as the spec</h3> -->
+							<div layout="row">
+								<div flex="5">
+									<img src="https://lh3.googleusercontent.com/i2YTrx2oAjrpTZAKE6pCIEXCrC3st6rJ8xFyaB1gaqLrR1HVMQJ14x7yt-epzMx1CzdSFxlOzQ=w1920-h1080-rw-no" class="avatar" />
+								</div>
+								<div flex="95" class="tweet-details">
+									<h3 class="no-padding-no-margin">Sonny R. Recio</h3>
+								</div>
+							</div>
+
+							<p>
+								The mango is a juicy stone fruit belonging to the genus Mangifera, consisting of numerous tropical fruiting trees, cultivated mostly for edible fruit. The majority of these species are found in nature as wild mangoes. They all belong to the flowering plant family Anacardiaceae. The mango is native to South and Southeast Asia, from where it has been distributed worldwide to become one of the most cultivated fruits in the tropics.
+							</p>
+
+
+						</div>
+					</md-dialog-content>
+
+					<md-dialog-actions layout="row">
+						<md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
+							More on Wikipedia
+						</md-button>
+						<span flex></span>
+						<md-button ng-click="answer('not useful')">
+							Not Useful
+						</md-button>
+						<md-button ng-click="answer('useful')">
+							Useful
+						</md-button>
+					</md-dialog-actions>
+				</form>
+			</md-dialog>
+		</script>
+
+		<md-toolbar class="md-hue-2">
+			<div class="md-toolbar-tools">
+				<md-button class="md-icon-button" aria-label="Settings" ng-disabled="true">
+					<md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+				</md-button>
+				<h2>
+					<span>Purr (a cat version of twitter using Material Design Framework for entertainment)</span>
+				</h2>
+				<span flex></span>
+				<md-button class="md-icon-button" aria-label="Favorite">
+					<md-icon md-svg-icon="img/icons/favorite.svg" style="color: greenyellow;"></md-icon>
+				</md-button>
+				<md-button class="md-icon-button" aria-label="More">
+					<md-icon md-svg-icon="img/icons/more_vert.svg"></md-icon>
+				</md-button>
+			</div>
+		</md-toolbar>
+
+		<md-content layout-padding>
+			<!-- <user-card name="Username" theme="forest"></user-card> -->
+			
+
+			<div>
+				<form name="userForm" ng-submit="submitTweet()" class="ng-pristine ng-valid ng-valid-mindate ng-valid-maxdate ng-valid-filtered ng-valid-valid ng-valid-required ng-valid-pattern">
+					<div layout="row">
+						<div flex="50" flex-offset="25">
+							<md-input-container class="md-block">
+								<label>Send me a meow</label>
+								<input ng-model="tweet.message">
+								<!-- <textarea ng-model="tweet.message" md-maxlength="150" rows="5"></textarea> -->
+							</md-input-container>
+						</div>
+					</div>
+					<div layout="column" layout-align="end end" flex="75">
+						<div>
+							<md-button class="md-raised md-primary" type="submit">MEOW</md-button>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<md-content>
+				<md-list flex>
+					<!-- <md-subheader class="md-no-sticky">Your daily meows</md-subheader> -->
+					<md-list-item class="md-2-line" ng-repeat="item in messages" ng-click="showAdvanced($event, item)">
+						<img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />
+						<div class="md-list-item-text" layout="column">
+							<h3>{{ item.who }}</h3>
+							<!-- <h4>{{ item.what }}</h4> -->
+							<h2 style="padding:0px;margin:0px;">{{ item.notes }}</h2>
+							<div layout="column">
+								<div layout="row">
+									<md-button class="md-raised md-primary">Reply</md-button>
+									<md-button class="md-raised md-primary">Share</md-button>
+									<md-button class="md-raised" ng-class="item.isLiked ? 'md-warn' : 'md-primary'" ng-click="like(item)">Like</md-button>
+								</div>
+							</div>
+						</div>
+					</md-list-item>
+				</md-list>
+			</md-content>
+		</md-content>
+
+	</div>
+</body>
+</html>
