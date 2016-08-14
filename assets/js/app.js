@@ -15,15 +15,20 @@ app.directive('userCard', function () {
 }).config(function ($mdThemingProvider) {
 
 	$mdThemingProvider.theme('forest').primaryPalette('brown').accentPalette('green');
-    // console.log('initializing....');
-
-    // $mdIconProvider
-    //   .defaultIconSet('img/icons/sets/social-icons.svg', 24);
 
 }).run(function($rootScope, $mdMedia, $mdDialog) {
 
+	var imagePath = 'http://static.boredpanda.com/blog/wp-content/uploads/2016/02/smiling-cat-shelter-adopted-coen-ava-rey-thumb.jpg';
+	//initialize posts
+	$rootScope.messages = [{
+		face : imagePath,
+		who: 'Min Li Chan',
+		notes: "I'll be in your neighborhood doing errands",
+		isLiked: false
+	}];
+	
 	var showLogin = function () {
-		var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+		var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
 		$mdDialog.show({
 			// locals: { tweetData: item },
 			controller: 'LoginController',
@@ -34,19 +39,42 @@ app.directive('userCard', function () {
 			fullscreen: useFullScreen
 		})
 		.then(function(answer) {
-			// $scope.status = 'You said the information was "' + answer + '".';
+
 		}, function() {
-			// $scope.status = 'You cancelled the dialog.';
 		});
 	}
 	showLogin();
 });
 
 
-app.controller('DialogController', function($scope, $mdDialog, tweetData) {
+app.controller('DialogController', function($scope, $mdDialog, tweetData, $rootScope) {
 
 	$scope.username = tweetData.who;
 	$scope.meowmessage = tweetData.notes;
+	$scope.isLiked = tweetData.isLiked;
+
+	$scope.showConfirm = function(ev) {
+	    // Appending dialog to document.body to cover sidenav in docs app
+	    var confirm = $mdDialog.confirm()
+	    .title('Delete your post?')
+	    .textContent('This will delete your post')
+	    .ariaLabel('Lucky day')
+	    .targetEvent(ev)
+	    .ok('YES')
+	    .cancel('NO');
+	    $mdDialog.show(confirm).then(function() {
+
+	    	//todo: if confirmed deletion
+	    	console.log(tweetData);
+
+	    	var index = $rootScope.messages.indexOf(tweetData);
+	    	if (index > -1) {	
+				$rootScope.messages.splice(index, 1);
+	    	}
+	    }, function() {
+	    	//todo: if cancelled
+	    });
+	};
 
 	$scope.hide = function() {
 		$mdDialog.hide();
@@ -63,7 +91,6 @@ app.controller('DialogController', function($scope, $mdDialog, tweetData) {
 
 app.controller('LoginController', function ($scope, $rootScope, $mdDialog, $mdToast) {
 	$scope.loginUser = function () {
-		console.log('Logged in!');
 		$rootScope.username = $scope.username;
 		$scope.showSimpleToast();
 		$mdDialog.hide();
@@ -103,10 +130,15 @@ app.controller('LoginController', function ($scope, $rootScope, $mdDialog, $mdTo
 });
 
 app.controller('DemoCtrl', function($scope, $mdMedia, $mdDialog, $rootScope, $mdToast) {
+	var imagePath = 'http://static.boredpanda.com/blog/wp-content/uploads/2016/02/smiling-cat-shelter-adopted-coen-ava-rey-thumb.jpg';
+
+	$scope.tweet = {
+		message: "\n\n\n" //workaround to make textarea rows grow by default
+	};
 
 	var last = {
-		bottom: false,
-		top: true,
+		bottom: true,
+		top: false,
 		left: false,
 		right: true
 	};
@@ -134,39 +166,10 @@ app.controller('DemoCtrl', function($scope, $mdMedia, $mdDialog, $rootScope, $md
 			.position(pinTo)
 			.hideDelay(3000)
 			);
-	};
-
-
-	// $scope.showLogin = function (ev) {
-
-	// 	var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
-	// 	// console.log(item);
-
-	// 	$mdDialog.show({
-	// 		// locals: { tweetData: item },
-	// 		controller: 'LoginController',
-	// 		templateUrl: 'loginform.tmpl.html',
-	// 		parent: angular.element(document.body),
-	// 		targetEvent: ev,
-	// 		clickOutsideToClose:true,
-	// 		fullscreen: useFullScreen
-	// 	})
-	// 	.then(function(answer) {
-	// 		$scope.status = 'You said the information was "' + answer + '".';
-	// 	}, function() {
-	// 		$scope.status = 'You cancelled the dialog.';
-	// 	});
-
-	// 	$scope.$watch(function() {
-	// 		return $mdMedia('xs') || $mdMedia('sm');
-	// 	}, function(wantsFullScreen) {
-	// 		$scope.customFullscreen = (wantsFullScreen === true);
-	// 	});
-	// }
+	};	
 
 	$scope.showAdvanced = function(ev, item) {
 		var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
-		// console.log(item);
 
 		$mdDialog.show({
 			locals: { tweetData: item },
@@ -197,11 +200,9 @@ app.controller('DemoCtrl', function($scope, $mdMedia, $mdDialog, $rootScope, $md
 
 	$scope.submitTweet = function () {
 		if ($scope.tweet.message != "") {
-			$scope.messages.unshift({
+			$rootScope.messages.unshift({
 				face : imagePath,
-				what: 'Brunch this weekend?',
 				who: $rootScope.username, //'Sonny',
-				when: '3:08PM',
 				notes: $scope.tweet.message
 			});
 			showSimpleToast();
@@ -209,13 +210,4 @@ app.controller('DemoCtrl', function($scope, $mdMedia, $mdDialog, $rootScope, $md
 		}
 	}
 
-	var imagePath = 'http://www.petdrugsonline.co.uk/images/page-headers/cats-master-header';
-	$scope.messages = [ {
-		face : imagePath,
-		what: 'Brunch this weekend?',
-		who: 'Min Li Chan',
-		when: '3:08PM',
-		notes: " I'll be in your neighborhood doing errands",
-		isLiked: false
-	}];
 });
